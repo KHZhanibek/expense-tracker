@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email    String @unique
+  password String
+
+  firstname String
+  lastname  String
+  phone     String
+
+  wallets UserOnWallet[]
+  @@map("users")
+}
+
+model Wallet{
+  id Int @id @default(autoincrement())
+    
+  title String
+  description String
+  
+  balance Int
+
+  users UserOnWallet[]
+  expenses Expense[]
+  @@map("wallets")
+}
+
+model UserOnWallet{
+  id Int @id @default(autoincrement())
+  
+  user_id Int
+  user User @relation(fields: [user_id], references: [id])
+  
+  wallet_id Int
+  wallet Wallet @relation(fields: [wallet_id], references: [id])
+  
+  @@map("users_on_wallets")
+}
+model Expense{
+  id Int @id @default(autoincrement())
+    
+  title String
+  description String
+  amount Int
+    
+  wallet_id Int
+  wallet Wallet @relation(fields: [wallet_id], references: [id])
+
+  category_id Int
+  category Category @relation(fields: [category_id], references: [id])
+    
+  @@map("expenses")
+}
+model Category{
+  id Int @id @default(autoincrement())
+    
+  title String
+  description String
+    
+  expenses Expense[]
+  @@map("categories")
+}
+
