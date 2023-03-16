@@ -102,6 +102,13 @@ export class UserService {
   }
 
   async deleteUser(userId: number){
+    if(await this.prismaService.user.count({
+      where:{
+        id: userId
+      }
+    }) == 0){
+      throw new ForbiddenException(`User with id ${userId} does not exists`);
+    }
     await this.prismaService.user.delete({
       where: {
         id: userId
