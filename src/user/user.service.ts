@@ -75,14 +75,10 @@ export class UserService {
   }
 
   async updateUser(userId: number, userDto: CreateDto) {
-    let encryptedPassword;
-    try{
-        encryptedPassword = this.encryptPassword(userDto.password)
-    }
-    catch(err){
-      return {message: err};
-    }
+    this.doesUserExists(userId)
 
+    let encryptedPassword:string = await this.encryptPassword(userDto.password)
+    
     const newUser = await this.prismaService.user.update({
       where: {
         id: userId
@@ -102,13 +98,7 @@ export class UserService {
   }
 
   async deleteUser(userId: number){
-    if(await this.prismaService.user.count({
-      where:{
-        id: userId
-      }
-    }) == 0){
-      throw new ForbiddenException(`User with id ${userId} does not exists`);
-    }
+    this.doesUserExists(userId)
     await this.prismaService.user.delete({
       where: {
         id: userId
@@ -117,4 +107,14 @@ export class UserService {
     return {message: `Successfully deleted user with id: ${userId}`};
   }
 
+
+  async doesUserExists(userId: number){
+    if(await this.prismaService.user.count({
+      where:{
+        id: userId
+      }
+    }) == 0){
+      throw new ForbiddenException(`User with id ${userId} does not exists`);
+    }
+  }
 }
