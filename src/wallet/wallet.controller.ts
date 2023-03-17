@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { WalletService } from './wallet.service';
 
 @Controller('wallet')
 export class WalletController {
-  constructor(private prismaSerivce: PrismaService){}
+  constructor(private walletService: WalletService){}
 
 }
