@@ -65,8 +65,15 @@ export class WalletService {
     return {message: `Successfully deleted wallet with id: ${walletId}`};
   }
   
+  //Wallet-Users
 
-  
+  async getUsersUsingWallet(walletId: number){
+    return await this.prismaService.wallet.findMany({
+      select:{
+        users: true
+      }
+    })
+  }
   
 
 }
