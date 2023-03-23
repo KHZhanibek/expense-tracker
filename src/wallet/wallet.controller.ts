@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { CreateDto } from './dto/create.dto';
 import { WalletService } from './wallet.service';
 
@@ -22,6 +22,13 @@ export class WalletController {
   }
 
   @Put(':id')
-  async updateWallet(@Param(''))
+  async updateWallet(@Param('id', ParseIntPipe) walletId: number, @Body() walletDto: CreateDto){
+    return this.updateWallet(walletId, walletDto);
+  }
+
+  @Delete(':id')
+  async deleteWallet(@Param('id', ParseIntPipe) walletId: number){
+    return this.walletService.deleteWallet(walletId);
+  }
 
 }
