@@ -18,12 +18,12 @@ export class WalletController {
 
   @Post()
   async createWallet(@Body() walletDto: CreateDto){
-    return this.createWallet(walletDto);
+    return this.walletService.createWallet(walletDto);
   }
 
   @Put(':id')
   async updateWallet(@Param('id', ParseIntPipe) walletId: number, @Body() walletDto: CreateDto){
-    return this.updateWallet(walletId, walletDto);
+    return this.walletService.updateWallet(walletId, walletDto);
   }
 
   @Delete(':id')
