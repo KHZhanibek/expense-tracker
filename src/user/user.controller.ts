@@ -9,28 +9,28 @@ export class UserController {
   
   @Get()
   getAllUsers(){
-      return this.userService.getAllUsers();
+    return this.userService.getAllUsers();
   }
 
   @Get(':id')
   getUser(@Param('id', ParseIntPipe) userId: number){
-      return this.userService.getUser(userId);
+    return this.userService.getUser(userId);
   }
 
   @Post()
   createUser(@Body() userDto: CreateDto){
-      console.log(userDto.email)
-      return this.userService.createUser(userDto);
+    console.log(userDto.email)
+    return this.userService.createUser(userDto);
   }
 
   @Put(':id')
   updateUser(@Param('id', ParseIntPipe) userId: number, @Body() userDto: CreateDto){
-      return this.userService.updateUser(userId, userDto);
+    return this.userService.updateUser(userId, userDto);
   }
 
   @Delete(':id')
   deleteUser(@Param('id', ParseIntPipe) userId: number){
-      return this.userService.deleteUser(userId);
+    return this.userService.deleteUser(userId);
   }
 
   
