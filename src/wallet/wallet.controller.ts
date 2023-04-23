@@ -30,5 +30,20 @@ export class WalletController {
   async deleteWallet(@Param('id', ParseIntPipe) walletId: number){
     return this.walletService.deleteWallet(walletId);
   }
+
+  @Get(':id/users')
+  async getUsersUsingWallet(@Param('id', ParseIntPipe) walletId: number){
+    return this.walletService.getUsersUsingWallet(walletId);
+  }
+
+  @Patch(':id/addUser/:userId')
+  async addUserToWallet(@Param('id', ParseIntPipe) walletId: number, @Param('userId', ParseIntPipe) userId: number){
+    return this.walletService.addUserToWallet(walletId, userId);
+  }
+
+  @Patch(':id/removeUser/:userId')
+  async removeUserFromWallet(@Param('id', ParseIntPipe) walletId: number, @Param('userId', ParseIntPipe) userId: number){
+    return this.walletService.removeUserFromWallet(walletId, userId);
+  }
   
 }

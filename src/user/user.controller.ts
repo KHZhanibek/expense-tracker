@@ -33,5 +33,23 @@ export class UserController {
     return this.userService.deleteUser(userId);
   }
 
+  @Get(':id/wallets')
+  async getWalletsOfUser(@Param('id', ParseIntPipe) userId: number){
+    return this.userService.getWalletsOfUser(userId);
+  }
+
+  @Post(':id/wallets/:walletId')
+  async addWalletToUser(@Param('id', ParseIntPipe) userId: number, @Param('walletId', ParseIntPipe) walletId: number){
+    return this.userService.addWalletToUser(userId, walletId);
+  }
+
+  @Delete(':id/wallets/:walletId')
+  async removeWalletFromUser(@Param('id', ParseIntPipe) userId: number, @Param('walletId', ParseIntPipe) walletId: number){
+    return this.userService.removeWalletFromUser(userId, walletId);
+  }
+
+  
+  
+
   
 }
