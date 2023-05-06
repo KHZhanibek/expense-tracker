@@ -4,9 +4,10 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { WalletModule } from './wallet/wallet.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot({ envFilePath: '.env' }), PrismaModule, UserModule, WalletModule],
+  imports: [AuthModule, ConfigModule.forRoot({ envFilePath: '.env' }), PrismaModule, UserModule, WalletModule, CategoryModule],
   controllers: [],
   providers: [],
 })
