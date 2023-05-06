@@ -31,6 +31,8 @@ model Wallet{
 
   users UserOnWallet[]
   expenses Expense[]
+
+  ownerId Int
   @@map("wallets")
 }
 
