@@ -117,4 +117,66 @@ export class UserService {
       throw new ForbiddenException(`User with id ${userId} does not exists`);
     }
   }
+
+  // getWalletsOfUser
+  async getWalletsOfUser(userId: number){
+    this.doesUserExists(userId)
+    return await this.prismaService.user.findFirst({
+      where:{
+        id: userId
+      },
+      select:{
+        wallets: true
+      }
+    })
+  }
+
+  // addWalletToUser
+  async addWalletToUser(userId: number, walletId: number){
+    this.doesUserExists(userId)
+    if(await this.prismaService.wallet.count({
+      where:{
+        id: walletId
+      }
+    }) == 0){
+      throw new ForbiddenException(`Wallet with id ${walletId} does not exists`);
+    }
+    return await this.prismaService.user.update({
+      where:{
+        id: userId
+      },
+      data:{
+        wallets:{
+          connect:{
+            id: walletId
+          }
+        }
+      }
+    })
+  }
+
+  // removeWalletFromUser
+  async removeWalletFromUser(userId: number, walletId: number){
+    this.doesUserExists(userId)
+    if(await this.prismaService.wallet.count({
+      where:{
+        id: walletId
+      }
+    }) == 0){
+      throw new ForbiddenException(`Wallet with id ${walletId} does not exists`);
+    }
+    return await this.prismaService.user.update({
+      where:{
+        id: userId
+      },
+      data:{
+        wallets:{
+          disconnect:{
+            id: walletId
+          }
+        }
+      }
+    })
+  }
+
 }
