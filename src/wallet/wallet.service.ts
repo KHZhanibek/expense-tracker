@@ -29,8 +29,7 @@ export class WalletService {
   }
 
   async getAllWallets(){
-    return await this.prismaService.wallet.findMany({
-    });
+    return await this.prismaService.wallet.findMany();
   }
 
   async getWallet(walletId: number){
@@ -110,7 +109,7 @@ export class WalletService {
     });
   
     return { 
-        message: `Successfully created wallet`,
+        message: `Successfully getting users`,
         users: users 
     };
   }
