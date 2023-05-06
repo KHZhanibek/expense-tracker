@@ -87,65 +87,55 @@ export class WalletService {
   
   //Wallet-Users
 
-  async getUsersUsingWallet(walletId: number){
-    return await this.prismaService.wallet.findMany({
-      include:{
-        users: {
-          include:{
-            user:true
-          }
-        }
+  async getUsersOfWallet(walletId: number) {
+    if (!this.walletExists(walletId)) {
+      return { message: `Wallet with id: ${walletId} does not exist` };
+    }
+  
+    const users = await this.prismaService.user.findMany({
+      where: {
+        wallets: {
+          some: {
+            wallet_id: walletId,
+          },
+        },
       },
-      where:{
-        id: walletId
-      }
-    })
+      select: {
+        id: true,
+        email: true,
+        firstname: true,
+        lastname: true,
+        phone: true,
+      },
+    });
+  
+    return { 
+        message: `Successfully created wallet`,
+        users: users 
+    };
   }
 
   async addUserToWallet(walletId: number, userId: number){
     if(!this.walletExists(walletId))
-      return {message: `Wallet with id: ${walletId} does not exists`}
-      if(!this.userExists(userId))
-      return {message: `Wallet with id: ${walletId} does not exists`}
-    
-    return await this.prismaService.userOnWallet.create({
-      data:{
-        user_id: userId,
-        wallet_id: walletId
-      }
-    })
+      return {message: `Wallet with id: ${walletId} does not exist`}
+      
+    if(!this.userExists(userId))
+      return {message: `User with id: ${userId} does not exist`}
+  
+    try {
+      const newUserOnWallet = await this.prismaService.userOnWallet.create({
+        data:{
+          user_id: userId,
+          wallet_id: walletId
+        }
+      });
+      
+      return { message: `User with id ${userId} has been added to wallet with id ${walletId}` };
+    } catch (error) {
+      return { message: `Failed to add user with id ${userId} to wallet with id ${walletId}: ${error.message}` };
+    }
   }
 
-  // async removeUserFromWallet(walletId: number, userId: number){
-  //   if(!this.walletExists(walletId))
-  //     return {message: `Wallet with id: ${walletId} does not exists`}
-  //   if(!this.userExists(userId))
-  //     return {message: `User with id: ${userId} does not exists`}
-    
-  //   await this.prismaService.userOnWallet.delete({
-  //     where:{
-  //       user_id: 
-  //     },
-  //     include:{
-  //       user: true,
-  //       wallet: true
-        
-  //     }
-  //   })
-    
-  //   await this.prismaService.wallet.update({
-  //     where:{
-  //       id: walletId
-  //     },
-  //     data:{
-  //       users: {
-  //         disconnect: {
-  //           id: userId
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
   async removeUserFromWallet(walletId: number, userId: number){
     if(!this.walletExists(walletId))
       return {message: `Wallet with id: ${walletId} does not exist`}
@@ -171,5 +161,6 @@ export class WalletService {
   
     return { message: `User with id ${userId} has been removed from wallet with id ${walletId}` };
   }
-  }
+
+    
 }

@@ -33,7 +33,7 @@ export class WalletController {
 
   @Get(':id/users')
   async getUsersUsingWallet(@Param('id', ParseIntPipe) walletId: number){
-    return this.walletService.getUsersUsingWallet(walletId);
+    return this.walletService.getUsersOfWallet(walletId);
   }
 
   @Patch(':id/addUser/:userId')
