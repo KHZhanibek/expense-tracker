@@ -57,9 +57,8 @@ model Expense{
   wallet_id Int
   wallet Wallet @relation(fields: [wallet_id], references: [id])
 
-  category_id Int
-  category Category @relation(fields: [category_id], references: [id])
-    
+  products Product[]
+
   @@map("expenses")
 }
 model Category{
@@ -67,8 +66,25 @@ model Category{
     
   title String
   description String
-    
-  expenses Expense[]
+
+  products Product[]
+
   @@map("categories")
+}
+
+model Product {
+  id Int @id @default(autoincrement())
+
+  name String
+  price Int
+
+  category_id Int
+  category Category @relation(fields: [category_id], references: [id])
+
+  expense_id Int
+  expense Expense  @relation(fields: [expense_id], references: [id])
+  
+
+  @@map("products")
 }
 
