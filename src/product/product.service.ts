@@ -39,6 +39,22 @@ export class ProductService {
     };
   }
 
+  async deleteProduct(id: number){
+    if(!this.productExists(id))
+      return {message: `Product with id: ${id} does not exists`}
+
+    const deletedProduct = await this.prismaService.product.delete({
+      where:{
+        id: id
+      }
+    })
+
+    return {
+      message: `Successfully deleted product`,
+      category: deletedProduct
+    };
+  }
+
   private async productExists(id: number){
     const product = await this.prismaService.product.findUnique({
       where:{
