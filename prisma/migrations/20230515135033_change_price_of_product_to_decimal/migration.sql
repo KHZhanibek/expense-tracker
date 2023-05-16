@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "expenses" ALTER COLUMN "amount" SET DATA TYPE DECIMAL(65,30);
+
+-- AlterTable
+ALTER TABLE "products" ALTER COLUMN "price" SET DATA TYPE DECIMAL(65,30);

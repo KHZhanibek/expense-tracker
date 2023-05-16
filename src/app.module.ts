@@ -6,9 +6,10 @@ import { UserModule } from './user/user.module';
 import { WalletModule } from './wallet/wallet.module';
 import { CategoryModule } from './category/category.module';
 import { ExpenseModule } from './expense/expense.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot({ envFilePath: '.env' }), PrismaModule, UserModule, WalletModule, CategoryModule, ExpenseModule],
+  imports: [AuthModule, ConfigModule.forRoot({ envFilePath: '.env' }), PrismaModule, UserModule, WalletModule, CategoryModule, ExpenseModule, ProductModule],
   controllers: [],
   providers: [],
 })
