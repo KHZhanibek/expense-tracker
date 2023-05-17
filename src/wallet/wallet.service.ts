@@ -12,6 +12,7 @@ export class WalletService {
         id: walletId
       }
     })
+    console.log(countWallet);
     if(countWallet == 0)
       return false;
     return true;
@@ -33,7 +34,8 @@ export class WalletService {
   }
 
   async getWallet(walletId: number){
-    if(!this.walletExists(walletId))
+
+    if(! (await this.walletExists(walletId)))
       return {message: `Wallet with id: ${walletId} does not exists`}
     
     return await this.prismaService.wallet.findFirst({
@@ -48,7 +50,8 @@ export class WalletService {
       data:{
         title: walletDto.title,
         description: walletDto.description,
-        balance: walletDto.balance
+        balance: walletDto.balance,
+        ownerId: walletDto.ownerId
       }
     });
 
@@ -59,6 +62,8 @@ export class WalletService {
   }
 
   async updateWallet(walletId: number, walletDto: CreateDto){
+    if(! (await this.walletExists(walletId)))
+      return {message: `Wallet with id: ${walletId} does not exists`}
     const newWallet = await this.prismaService.wallet.update({
       where:{
         id: walletId
@@ -76,6 +81,16 @@ export class WalletService {
   }
 
   async deleteWallet(walletId: number){
+    console.log(await this.walletExists(walletId))
+
+    if(! (await this.walletExists(walletId)))
+      return {message: `Wallet with id: ${walletId} does not exists`}
+
+    await this.prismaService.userOnWallet.deleteMany({
+      where:{
+        wallet_id: walletId
+      }
+    })
     await this.prismaService.wallet.delete({
       where:{
         id: walletId
@@ -87,7 +102,7 @@ export class WalletService {
   //Wallet-Users
 
   async getUsersOfWallet(walletId: number) {
-    if (!this.walletExists(walletId)) {
+    if (await this.walletExists(walletId) == false) {
       return { message: `Wallet with id: ${walletId} does not exist` };
     }
   
@@ -115,7 +130,7 @@ export class WalletService {
   }
 
   async addUserToWallet(walletId: number, userId: number){
-    if(!this.walletExists(walletId))
+    if(!(await this.walletExists(walletId)))
       return {message: `Wallet with id: ${walletId} does not exist`}
       
     if(!this.userExists(userId))
@@ -136,9 +151,9 @@ export class WalletService {
   }
 
   async removeUserFromWallet(walletId: number, userId: number){
-    if(!this.walletExists(walletId))
+    if(!(await this.walletExists(walletId)))
       return {message: `Wallet with id: ${walletId} does not exist`}
-    if(!this.userExists(userId))
+    if(!(await this.userExists(userId)))
       return {message: `User with id: ${userId} does not exist`}
 
     const userOnWallet = await this.prismaService.userOnWallet.findFirst({

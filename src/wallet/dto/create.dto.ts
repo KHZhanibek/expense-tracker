@@ -12,4 +12,8 @@ export class CreateDto{
   @IsNumber()
   @IsNotEmpty()
   balance: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  ownerId: number;
 }
