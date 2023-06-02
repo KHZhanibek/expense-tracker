@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateDto } from './dto/create.dto';
+import { CreateWalletDto } from './dto/create.wallet.dto';
+import { CreateExpenseDto } from './dto/create.expense.dto';
 
 @Injectable()
 export class WalletService {
@@ -45,7 +46,11 @@ export class WalletService {
     })
   }
 
-  async createWallet(walletDto: CreateDto){
+  async createWallet(walletDto: CreateWalletDto){
+
+    if(!this.userExists(walletDto.ownerId))
+      return {message: `User with id: ${walletDto.ownerId} does not exists`}
+
     const newWallet = await this.prismaService.wallet.create({
       data:{
         title: walletDto.title,
@@ -55,13 +60,21 @@ export class WalletService {
       }
     });
 
+    await this.prismaService.userOnWallet.create({
+      data:{
+        user_id: walletDto.ownerId,
+        wallet_id: newWallet.id
+      }
+    })
+
+
     return {
       message: `Successfully created wallet`,
       wallet: newWallet
     };
   }
 
-  async updateWallet(walletId: number, walletDto: CreateDto){
+  async updateWallet(walletId: number, walletDto: CreateWalletDto){
     if(! (await this.walletExists(walletId)))
       return {message: `Wallet with id: ${walletId} does not exists`}
     const newWallet = await this.prismaService.wallet.update({
@@ -174,6 +187,35 @@ export class WalletService {
     });
   
     return { message: `User with id ${userId} has been removed from wallet with id ${walletId}` };
+  }
+
+  async getExpensesOfWallet(walletId: number){
+    if(!(await this.walletExists(walletId)))
+      return {message: `Wallet with id: ${walletId} does not exist`}
+
+    const expenses = await this.prismaService.expense.findMany({
+      where:{
+        wallet_id: walletId
+      }
+    })
+
+    return {message: `Successfully getting expenses`, expenses: expenses}
+  }
+
+  async createExpenseOfWallet(walletId: number, expenseDto: CreateExpenseDto){
+    if(!(await this.walletExists(walletId)))
+      return {message: `Wallet with id: ${walletId} does not exist`}
+
+    const newExpense = await this.prismaService.expense.create({
+      data:{
+        title: expenseDto.title,
+        description: expenseDto.description,
+        amount: 0,
+        wallet_id: walletId
+      }
+    })
+
+    return {message: `Successfully created expense`, expense: newExpense}
   }
 
     

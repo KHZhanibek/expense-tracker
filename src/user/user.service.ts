@@ -1,8 +1,10 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateDto } from './dto/create.dto';
 import * as bcrypt from 'bcrypt'
 import { prisma } from '@prisma/client';
+import { CreateUserDto } from './dto/create.user.dto';
+import { UpdateUserDto } from './dto/update.user.dto';
+import { CreateExpenseDto } from 'src/expense/dto/create.expense.dto';
 
 @Injectable()
 export class UserService {
@@ -47,7 +49,7 @@ export class UserService {
     return user;
   }
 
-  async createUser(userDto: CreateDto){
+  async createUser(userDto: CreateUserDto){
     const user = await this.prismaService.user.findUnique({
       where: { 
         email: userDto.email 
@@ -74,7 +76,7 @@ export class UserService {
     };
   }
 
-  async updateUser(userId: number, userDto: CreateDto) {
+  async updateUser(userId: number, userDto: UpdateUserDto) {
     this.doesUserExists(userId)
 
     let encryptedPassword:string = await this.encryptPassword(userDto.password)
@@ -177,6 +179,49 @@ export class UserService {
         }
       }
     })
+  }
+
+  // getExpensesOfUser
+  async getExpensesOfUser(userId: number){
+    this.doesUserExists(userId)
+    return await this.prismaService.expense.findMany({
+      where: {
+        wallet: {
+          users: {
+            some: {
+              user_id: userId
+            }
+          }
+        }
+      }
+    });
+  }
+
+  async createExpenseOfWallet(userId: number, walletId: number, createExpenseDto: CreateExpenseDto){
+    this.doesUserExists(userId);
+
+    if(await this.prismaService.userOnWallet.count({
+        where:{
+            user_id: userId,
+            wallet_id: walletId
+        }
+    }) == 0){
+        throw new ForbiddenException(`User with userId:${userId} do not have wallet with walletId:${walletId}`);
+    }
+
+    return await this.prismaService.expense.create({
+      data:{
+        title: createExpenseDto.title,
+        description: createExpenseDto.description,
+        amount: 0,
+        wallet: {
+          connect: {
+            id: walletId
+          }
+        },
+      }
+    })
+
   }
 
 }

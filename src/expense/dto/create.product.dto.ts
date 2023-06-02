@@ -1,13 +1,14 @@
+import { Decimal } from '@prisma/client/runtime';
 import { IsNotEmpty, IsString, IsNumber, ValidateNested } from 'class-validator';
 
-export class ProductDto {
+export class CreateProductDto {
   @IsNotEmpty()
   @IsString()
   name: string;
 
   @IsNotEmpty()
   @IsNumber()
-  price: number;
+  price: Decimal;
 
   @IsNumber()
   categoryId: number;

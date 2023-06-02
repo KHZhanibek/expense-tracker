@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { CreateProductDto } from 'src/expense/dto/create.product.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateDto } from './dto/create.dto';
+import { UpdateProductDto } from './dto/update.product.dto';
 
 @Injectable()
 export class ProductService {
@@ -19,7 +20,7 @@ export class ProductService {
     });
   }
 
-  async updateProduct(id: number, productDto: CreateDto){
+  async updateProduct(id: number, productDto: UpdateProductDto){
     if(!this.productExists(id))
       return {message: `Product with id: ${id} does not exists`}
 

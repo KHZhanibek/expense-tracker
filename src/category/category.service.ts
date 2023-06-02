@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateDto } from './dto/create.dto';
+import { CreateCategoryDto } from './dto/create.category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -19,7 +19,7 @@ export class CategoryService {
     })
   }
 
-  async createCategory(categoryDto: CreateDto){
+  async createCategory(categoryDto: CreateCategoryDto){
     const newCategory = await this.prismaService.category.create({
       data:{
         title: categoryDto.title,
@@ -32,7 +32,7 @@ export class CategoryService {
     };
   }
 
-  async updateCategory(categoryId: number, categoryDto: CreateDto){
+  async updateCategory(categoryId: number, categoryDto: CreateCategoryDto){
     if(!this.categoryExists(categoryId))
       return {message: `Category with id: ${categoryId} does not exists`}
 

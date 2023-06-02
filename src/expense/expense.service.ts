@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateDto } from './dto/create.dto';
+import { CreateExpenseDto, ExpenseType } from './dto/create.expense.dto';
+import { Decimal } from '@prisma/client/runtime';
+import { CreateProductDto } from './dto/create.product.dto';
 
 @Injectable()
 export class ExpenseService {
   constructor(private prismaService: PrismaService){}
 
   async getAllExpenses(){
-    return await this.prismaService.expense.findMany();
+    return await this.prismaService.expense.findMany({});
   }
 
   async getExpense(expenseId: number){
@@ -18,14 +20,19 @@ export class ExpenseService {
     })
   }
 
-  async createExpense(expenseDto: CreateDto, walletId: number){
-    const { title, description, products } = expenseDto;
+  async createExpense(expenseDto: CreateExpenseDto, walletId: number){
+    const { title, description } = expenseDto;
     // Create the expense record
+    let x: Decimal.Value;
+    if (expenseDto.type == ExpenseType.EXPENSE)
+      x = -1;
+    else
+      x = 1;
     const newExpense = await this.prismaService.expense.create({
       data: {
         title,
         description,
-        amount: 0,
+        amount: x,
         wallet: { connect: { id: walletId } },
       },
     });
@@ -38,19 +45,6 @@ export class ExpenseService {
     `;
     const categoryId = categories[0].category_id;
 
-    // Create the associated products
-    const productPromises = products.map((product) =>
-      this.prismaService.product.create({
-        data: {
-          name: product.name,
-          price: product.price,
-          expense: { connect: { id: newExpense.id } },
-          category: { connect: { id: categoryId } },
-        },
-      })
-    );
-
-    await Promise.all(productPromises);
 
     return {
       message: 'Expense created successfully',
@@ -58,8 +52,8 @@ export class ExpenseService {
     };
   }
 
-  async updateExpense(expenseId: number, expenseDto: CreateDto){
-    const { title, description, products } = expenseDto;
+  async updateExpense(expenseId: number, expenseDto: CreateExpenseDto){
+    const { title, description } = expenseDto;
     const updatedExpense = await this.prismaService.expense.update({
       where:{
         id: expenseId
@@ -102,4 +96,40 @@ export class ExpenseService {
       }
     })
   }
+
+  // async createExpenseProducts(expenseId: number, productDto: CreateProductDto[]){
+
+  //   if(!this.getExpense(expenseId))
+  //     return {message: `Expense with id: ${expenseId} does not exists`}
+
+  //   const newProducts = await Promise.all(productDto.map(async (product) => {
+  //     const { name, price } = product;
+  //     await this.prismaService.product.createMany({
+  //       data: {
+  //         name,
+  //         price,
+  //         expense: { connect: { id: expenseId } },
+  //       },
+  //     });
+  //   }));
+
+  //   let priceSum;
+  //   productDto.forEach(async (product) => {
+  //     priceSum += product.price;
+  //   });
+
+  //   await this.prismaService.expense.update({
+  //     where:{
+  //       id: expenseId
+  //     },
+  //     data:{
+  //       amount: priceSum * amount
+  //     }
+
+  //   return {
+  //     message: 'Products created successfully',
+  //     products: newProducts,
+  //   };
+
+  // }
 }

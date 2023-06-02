@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ProductController } from './product.controller';
 import { ProductService } from './product.service';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { JwtService } from '@nestjs/jwt';
+import { ProductController } from './product.controller';
 
 @Module({
   controllers: [ProductController],
-  providers: [ProductService]
+  providers: [ProductService, JwtService]
 })
 export class ProductModule {}
