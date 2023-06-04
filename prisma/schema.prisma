@@ -16,8 +16,12 @@ model User {
   firstname String
   lastname  String
   phone     String
+  token     String @unique
+  confirmed  Boolean @default(false)
+  registeredAt DateTime @default(now())
 
   wallets UserOnWallet[]
+  expenses Expense[]
   @@map("users")
 }
 
@@ -26,6 +30,7 @@ model Wallet{
     
   title String
   description String
+  date DateTime @default(now())
   
   balance Int
 
@@ -53,9 +58,13 @@ model Expense{
   title String
   description String
   amount Decimal
+  date DateTime @default(now())
     
   wallet_id Int
   wallet Wallet @relation(fields: [wallet_id], references: [id], onDelete: Cascade)
+
+  user_id Int
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   products Product[]
 

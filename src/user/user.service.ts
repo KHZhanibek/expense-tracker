@@ -49,32 +49,32 @@ export class UserService {
     return user;
   }
 
-  async createUser(userDto: CreateUserDto){
-    const user = await this.prismaService.user.findUnique({
-      where: { 
-        email: userDto.email 
-      }
-    });
-    if (user) {
-      throw new ForbiddenException('Email already in use');
-    }
+  // async createUser(userDto: CreateUserDto){
+  //   const user = await this.prismaService.user.findUnique({
+  //     where: { 
+  //       email: userDto.email 
+  //     }
+  //   });
+  //   if (user) {
+  //     throw new ForbiddenException('Email already in use');
+  //   }
 
-    let encryptedPassword: string = await this.encryptPassword(userDto.password)
+  //   let encryptedPassword: string = await this.encryptPassword(userDto.password)
 
-    const newUser = await this.prismaService.user.create({
-      data: {
-        email: userDto.email,
-        password: encryptedPassword,
-        firstname: userDto.firstname,
-        lastname: userDto.lastname,
-        phone: userDto.phone
-      }
-    });
-    return {
-      message: `Successfully created user`,
-      user: newUser
-    };
-  }
+  //   const newUser = await this.prismaService.user.create({
+  //     data: {
+  //       email: userDto.email,
+  //       password: encryptedPassword,
+  //       firstname: userDto.firstname,
+  //       lastname: userDto.lastname,
+  //       phone: userDto.phone
+  //     }
+  //   });
+  //   return {
+  //     message: `Successfully created user`,
+  //     user: newUser
+  //   };
+  // }
 
   async updateUser(userId: number, userDto: UpdateUserDto) {
     this.doesUserExists(userId)
@@ -219,6 +219,11 @@ export class UserService {
             id: walletId
           }
         },
+        user: {
+          connect: {
+            id: userId
+          }
+        }
       }
     })
 

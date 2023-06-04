@@ -202,21 +202,21 @@ export class WalletService {
     return {message: `Successfully getting expenses`, expenses: expenses}
   }
 
-  async createExpenseOfWallet(walletId: number, expenseDto: CreateExpenseDto){
-    if(!(await this.walletExists(walletId)))
-      return {message: `Wallet with id: ${walletId} does not exist`}
+  // async createExpenseOfWallet(walletId: number, expenseDto: CreateExpenseDto){
+  //   if(!(await this.walletExists(walletId)))
+  //     return {message: `Wallet with id: ${walletId} does not exist`}
 
-    const newExpense = await this.prismaService.expense.create({
-      data:{
-        title: expenseDto.title,
-        description: expenseDto.description,
-        amount: 0,
-        wallet_id: walletId
-      }
-    })
+  //   const newExpense = await this.prismaService.expense.create({
+  //     data:{
+  //       title: expenseDto.title,
+  //       description: expenseDto.description,
+  //       amount: 0,
+  //       wallet_id: walletId
+  //     }
+  //   })
 
-    return {message: `Successfully created expense`, expense: newExpense}
-  }
+  //   return {message: `Successfully created expense`, expense: newExpense}
+  // }
 
     
 }

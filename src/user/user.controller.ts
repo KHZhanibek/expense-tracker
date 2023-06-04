@@ -28,14 +28,14 @@ export class UserController {
     return this.userService.getUser(userId);
   }
 
-  @ApiBearerAuth()
-  @ApiOperation({summary: 'Create user'})
-  @UseGuards(AuthGuard)
-  @Post()
-  createUser(@Body() userDto: CreateUserDto){
-    console.log(userDto.email)
-    return this.userService.createUser(userDto);
-  }
+  // @ApiBearerAuth()
+  // @ApiOperation({summary: 'Create user'})
+  // @UseGuards(AuthGuard)
+  // @Post()
+  // createUser(@Body() userDto: CreateUserDto){
+  //   console.log(userDto.email)
+  //   return this.userService.createUser(userDto);
+  // }
 
   @ApiBearerAuth()
   @ApiOperation({summary: 'Update user'})

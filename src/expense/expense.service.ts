@@ -20,37 +20,37 @@ export class ExpenseService {
     })
   }
 
-  async createExpense(expenseDto: CreateExpenseDto, walletId: number){
-    const { title, description } = expenseDto;
-    // Create the expense record
-    let x: Decimal.Value;
-    if (expenseDto.type == ExpenseType.EXPENSE)
-      x = -1;
-    else
-      x = 1;
-    const newExpense = await this.prismaService.expense.create({
-      data: {
-        title,
-        description,
-        amount: x,
-        wallet: { connect: { id: walletId } },
-      },
-    });
-    // Get the category id
-    const categories = await this.prismaService.$queryRaw `
-      SELECT *
-      FROM products
-      WHERE name ILIKE '%' || ${title} || '%'
-      ORDER BY similarity(name, ${title}) DESC;
-    `;
-    const categoryId = categories[0].category_id;
+  // async createExpense(expenseDto: CreateExpenseDto, walletId: number){
+  //   const { title, description } = expenseDto;
+  //   // Create the expense record
+  //   let x: Decimal.Value;
+  //   if (expenseDto.type == ExpenseType.EXPENSE)
+  //     x = -1;
+  //   else
+  //     x = 1;
+  //   const newExpense = await this.prismaService.expense.create({
+  //     data: {
+  //       title,
+  //       description,
+  //       amount: x,
+  //       wallet: { connect: { id: walletId } },
+  //     },
+  //   });
+  //   // Get the category id
+  //   const categories = await this.prismaService.$queryRaw `
+  //     SELECT *
+  //     FROM products
+  //     WHERE name ILIKE '%' || ${title} || '%'
+  //     ORDER BY similarity(name, ${title}) DESC;
+  //   `;
+  //   const categoryId = categories[0].category_id;
 
 
-    return {
-      message: 'Expense created successfully',
-      expense: newExpense,
-    };
-  }
+  //   return {
+  //     message: 'Expense created successfully',
+  //     expense: newExpense,
+  //   };
+  // }
 
   async updateExpense(expenseId: number, expenseDto: CreateExpenseDto){
     const { title, description } = expenseDto;

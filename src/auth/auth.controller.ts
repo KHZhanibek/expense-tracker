@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginEmailDto, RegisterDto } from './dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -24,6 +24,12 @@ export class AuthController {
   @Post('login/with-email')
   login(@Body() dto: LoginEmailDto) {
     return this.authService.loginByEmail(dto);
+  }
+
+  @ApiOperation({summary: 'Confirm user'})
+  @Get('confirm')
+  confirm(@Body() token: string) {
+    return this.authService.confirm(token);
   }
 
   // @ApiOperation({summary: 'Login user'})
