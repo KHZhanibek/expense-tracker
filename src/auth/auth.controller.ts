@@ -28,7 +28,8 @@ export class AuthController {
 
   @ApiOperation({summary: 'Confirm user'})
   @Get('confirm')
-  confirm(@Query() token: string) {
+  confirm(@Query("token") token: string) {
+    console.log(token)
     return this.authService.confirm(token);
   }
 
