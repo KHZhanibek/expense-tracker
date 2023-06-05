@@ -1,5 +1,4 @@
-
-import { Injectable } from '@nestjs/common';
+import { ImATeapotException, Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
 @Injectable()
@@ -9,17 +8,19 @@ export class EmailService {
   constructor() {
     // Create a Nodemailer transporter
     this.transporter = nodemailer.createTransport({
-      service: 'hotmail',
+      host: 'smtp.mail.ru',
+      port: 465,
+      secure: true,
       auth: {
-        user: "midasbudgetapp@outlook.com",
-        pass: "Midas123",
+        user: process.env.CONFIRM_EMAIL, // Replace with your Mail.ru email address
+        pass: process.env.CONFIRM_PASSWORD, // Replace with your Mail.ru password
       },
     });
   }
 
   async sendConfirmationEmail(email: string, confirmationLink: string) {
     const mailOptions: nodemailer.SendMailOptions = {
-      from: 'midasbudgetapp@outlook.com',
+      from: `Midas Team <${process.env.CONFIRM_EMAIL}>`, // Replace with your Mail.ru email address
       to: email,
       subject: 'Confirm your email in Midas Budget App',
       html: `
@@ -35,6 +36,10 @@ export class EmailService {
       console.log('Confirmation email sent successfully!');
     } catch (error) {
       console.error('Failed to send confirmation email:', error);
+      throw new ImATeapotException("Failed to send confirmation email")
     }
   }
 }
+
+
+

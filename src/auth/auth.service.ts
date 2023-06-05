@@ -38,6 +38,9 @@ export class AuthService {
 
     const token = randomBytes(32).toString('hex');
 
+    const confirmationLink = process.env.BASE_URL + `/auth/confirm?token=${token}`;
+    await this.emailService.sendConfirmationEmail(dto.email, confirmationLink);
+    
     const newUser = await this.prisma.user.create({
       data: {
         email: dto.email,
@@ -48,8 +51,6 @@ export class AuthService {
         token: token
         },
     });
-    const confirmationLink = process.env.BASE_URL + `/auth/confirm?token=${token}`;
-    await this.emailService.sendConfirmationEmail(newUser.email, confirmationLink);
 
     return newUser;
   }
