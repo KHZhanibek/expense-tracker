@@ -91,7 +91,7 @@ export class UserController {
   @Post(':id/wallets/:walletId/expenses')
   async createExpenseOfWallet(
     @Param('id', ParseIntPipe) userId: number,
-    @Param('id', ParseIntPipe) walletId: number, 
+    @Param('walletId', ParseIntPipe) walletId: number, 
     @Body() createExpenseDto: CreateExpenseDto
     ){
         return this.userService.createExpenseOfWallet(userId, walletId, createExpenseDto);

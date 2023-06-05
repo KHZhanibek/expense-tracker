@@ -4,8 +4,8 @@ import { CreateCategoryDto } from './dto/create.category.dto';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 
-@ApiTags('category')
-@Controller('category')
+@ApiTags('categories')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

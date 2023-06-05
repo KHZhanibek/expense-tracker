@@ -5,8 +5,8 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { UpdateProductDto } from './dto/update.product.dto';
 
 
-@ApiTags('product')
-@Controller('product')
+@ApiTags('products')
+@Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService){}
 
