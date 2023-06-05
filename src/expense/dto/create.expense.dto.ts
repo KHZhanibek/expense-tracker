@@ -2,8 +2,8 @@ import { IsNotEmpty, IsString, IsNumber, ValidateNested, IsOptional } from 'clas
 import { ApiProperty } from '@nestjs/swagger';
 
 export enum ExpenseType {
-  INCOME = 'INCOME',
-  EXPENSE = 'EXPENSE'
+  INCOME,
+  EXPENSE
 }
 
 export class CreateExpenseDto {
@@ -16,8 +16,8 @@ export class CreateExpenseDto {
   @ApiProperty()
   type: ExpenseType;
 
+  @ApiProperty()
   @IsString()
-  @IsOptional()
   description: string;
 
 }

@@ -12,6 +12,9 @@ export class AuthGuard implements CanActivate {
     console.log("I am in auth guard");
     const request = context.switchToHttp().getRequest();
     const authHeader = request.headers.authorization;
+    if(!authHeader){
+      throw new UnauthorizedException("User is not autenticated");
+    }
     // console.log(authHeader);
     const token = authHeader.split(' ')[1];
     console.log(token);
